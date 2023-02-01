@@ -3,12 +3,12 @@ const mongoose = require("mongoose");
 const reviewsSchema = new mongoose.Schema({
   name: String,
   comment: String,
-  review: {
+  game: {
     type: mongoose.Types.ObjectId,
-    ref: "Reviews",
+    ref: "Game",
   },
 });
 
-const Reviews = mongoose.model("reviews", reviewsSchema);
+const Review = mongoose.model("Reviews", reviewsSchema);
 
-module.exports = Reviews;
+module.exports = Review;

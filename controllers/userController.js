@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
-const Games = require("../models/Games");
+const Games = require("../models/Game");
 
 //index
 router.get("/", async (req, res) => {

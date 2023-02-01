@@ -3,9 +3,9 @@ const app = express();
 const cors = require("cors");
 const morgan = require("morgan");
 require("./config/db.connection");
-const usersController = require("./controllers/user_controller");
-const gamesController = require("./controllers/Games_controller");
-const reviewsController = require("./controllers/reviews_controller");
+const usersController = require("./controllers/userController");
+const gamesController = require("./controllers/gamesController");
+const reviewsController = require("./controllers/reviewsController");
 require("dotenv").config();
 const { PORT } = process.env;
 

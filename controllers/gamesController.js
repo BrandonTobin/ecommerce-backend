@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const Reviews = require("../models/Reviews");
-const Games = require("../models/Games");
+const Games = require("../models/Game");
+const Reviews = require("../models/Review");
 
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
@@ -9,18 +9,19 @@ router.use(express.urlencoded({ extended: true }));
 //index
 router.get("/", async (req, res, next) => {
   try {
-    const allReviews = await Reviews.find({}).populate("post");
-    res.status(200).json(allReviews);
+    const allGames = await Games.find({}).populate("User");
+    res.status(200).json(allGames);
   } catch (err) {
     res.status(400).json({ error: err });
     next(err);
   }
 });
+//show
 router.get("/:id", async (req, res, next) => {
   try {
     const foundGame = await Games.findById(req.params.id);
-    const postReviews = await Reviews.find({ user: req.params.id });
-    res.status(200).json({ post: foundGame, review: postReviews });
+    const gameReviews = await Reviews.find({ game: req.params.id });
+    res.status(200).json({ game: foundGame, reviews: gameReviews });
   } catch (err) {
     res.status(400).json({ error: err });
     next(err);
@@ -29,8 +30,8 @@ router.get("/:id", async (req, res, next) => {
 //create
 router.post("/", async (req, res) => {
   try {
-    const newReview = await Reviews.create(req.body);
-    res.status(201).json(newReviews);
+    const newGame = await Games.create(req.body);
+    res.status(201).json(newGame);
   } catch (err) {
     console.log(err);
     res.status(400).json({ error: err });
@@ -39,12 +40,10 @@ router.post("/", async (req, res) => {
 //update
 router.put("/:id", async (req, res) => {
   try {
-    const updateReviews = await Reviews.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-    res.status(201).json(updateReviews);
+    const updateGame = await Games.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    res.status(201).json(updateGame);
   } catch (err) {
     res.status(400).json({ error: err });
   }
@@ -52,8 +51,9 @@ router.put("/:id", async (req, res) => {
 //destroy
 router.delete("/:id", async (req, res) => {
   try {
-    const destroyReviews = await Reviews.findByIdAndDelete(req.params.id);
-    res.status(201).json(destroyReviews);
+    const destroyGame = await Games.findByIdAndDelete(req.params.id);
+    const destroyReviews = await Reviews.deleteMany({ game: req.params.id });
+    res.status(200).json({ games: destroyGame, reviews: destroyReviews });
   } catch (err) {
     res.status(400).json({ error: err });
   }
