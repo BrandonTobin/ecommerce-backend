@@ -24,5 +24,5 @@ app.use('/auth', authController)
 app.get('/', (req, res) => res.redirect('/game'))
 
 app.listen(PORT, () => {
-  console.log(`listening on: ${PORT}`)
+  console.log(`Listening on: ${PORT}`)
 })

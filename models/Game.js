@@ -18,10 +18,6 @@ const GameSchema = new mongoose.Schema({
     type: String,
     required: [true, "Title required"]
   },
-  year: {
-    type: String,
-    required: [true, "date required"]
-  },
 }, { timestamps: true });
 
 const Game = mongoose.model("Game", GameSchema);
