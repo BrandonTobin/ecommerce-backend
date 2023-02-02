@@ -1,62 +1,60 @@
-const express = require("express");
-const router = express.Router();
-const Games = require("../models/Game");
-const Reviews = require("../models/Review");
+const express = require('express')
+const router = express.Router()
 
-router.use(express.json());
-router.use(express.urlencoded({ extended: true }));
+const { Game } = require('../models')
 
-//index
-router.get("/", async (req, res, next) => {
-  try {
-    const allGames = await Games.find({}).populate("User");
-    res.status(200).json(allGames);
-  } catch (err) {
-    res.status(400).json({ error: err });
-    next(err);
-  }
-});
-//show
-router.get("/:id", async (req, res, next) => {
-  try {
-    const foundGame = await Games.findById(req.params.id);
-    const gameReviews = await Reviews.find({ game: req.params.id });
-    res.status(200).json({ game: foundGame, reviews: gameReviews });
-  } catch (err) {
-    res.status(400).json({ error: err });
-    next(err);
-  }
-});
-//create
-router.post("/", async (req, res) => {
-  try {
-    const newGame = await Games.create(req.body);
-    res.status(201).json(newGame);
-  } catch (err) {
-    console.log(err);
-    res.status(400).json({ error: err });
-  }
-});
-//update
-router.put("/:id", async (req, res) => {
-  try {
-    const updateGame = await Games.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
-    res.status(201).json(updateGame);
-  } catch (err) {
-    res.status(400).json({ error: err });
-  }
-});
-//destroy
-router.delete("/:id", async (req, res) => {
-  try {
-    const destroyGame = await Games.findByIdAndDelete(req.params.id);
-    const destroyReviews = await Reviews.deleteMany({ game: req.params.id });
-    res.status(200).json({ games: destroyGame, reviews: destroyReviews });
-  } catch (err) {
-    res.status(400).json({ error: err });
-  }
-});
+router.use(express.json())
+console.log(Game)
 
-module.exports = router;
+router.get('/', async (req, res) => {
+  try {
+    const allGame = await Game.find({})
+    res.status(200).json(allGame)
+  } catch (err) {
+    res.status(400).json({ error: err })
+  }
+})
+
+router.get('/:id', async (req, res) => {
+  try {
+    const foundGame = await Game.findById(req.params.id)
+    res.status(200).json(foundGame)
+  } catch (err) {
+    res.status(400).json({ error: err })
+  }
+})
+
+router.post('/', async (req, res, next) => {
+  try {
+    const createdGame = await Game.create(req.body)
+    console.log(createdGame)
+    res.status(201).json(createdGame)
+  } catch (error) {
+    console.error(error)
+    return next(error)
+  }
+})
+
+router.put('/:id', async (req, res, next) => {
+  try {
+    const updatedGame = await Game.findByIdAndUpdate(req.params.id, req.body, { new: true })
+    console.log(updatedGame)
+    return res.status(200).json(updatedGame)
+  } catch (error) {
+    console.error(error)
+    return next(error)
+  }
+})
+
+router.delete('/:id', async (req, res, next) => {
+  try {
+    const deletedGame = await Game.findByIdAndDelete(req.params.id)
+    console.log(deletedGame)
+    res.redirect('/game')
+  } catch (error) {
+    console.error(error)
+    return next(error)
+  }
+})
+
+module.exports = router

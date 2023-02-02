@@ -1,24 +1,28 @@
 const express = require("express");
 const app = express();
-const cors = require("cors");
-const morgan = require("morgan");
-require("./config/db.connection");
-const usersController = require("./controllers/userController");
-const gamesController = require("./controllers/gamesController");
-const reviewsController = require("./controllers/reviewsController");
+
+const cors = require('cors')
+const morgan = require('morgan')
+
+const gameController = require('./controllers/gameController')
+const reviewController = require('./controllers/reviewController')
+const authController = require('./controllers/authController')
+
+
 require("dotenv").config();
-const { PORT } = process.env;
+require("./config/db.connection")
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(morgan("dev"));
-app.use(cors());
-app.use("/users", usersController);
-app.use("/posts", gamesController);
-app.use("/comments", reviewsController);
+const PORT = process.env.PORT || 4000
 
-app.get("/", (req, res) => {
-  res.redirect("/authors");
-});
+app.use(express.json())
+app.use(cors())
+app.use(morgan('dev'))
 
-app.listen(PORT, () => console.log(`Listening to port: ${PORT}`));
+app.use('/game', gameController)
+app.use('/review', reviewController)
+app.use('/auth', authController)
+app.get('/', (req, res) => res.redirect('/game'))
+
+app.listen(PORT, () => {
+  console.log(`listening on: ${PORT}`)
+})
