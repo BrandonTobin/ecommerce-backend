@@ -6,13 +6,13 @@ const GameReviewSchema = new mongoose.Schema({
   rating: {
     type: Number,
     required: false,
-    minlegnth: 1,
+    minlength: 1,
     maxlength: 10
   },
   comment: {
     type: String,
     required: false,
-    max: 250
+    max: 500
   },
   title: {
     type: mongoose.Types.ObjectId,
